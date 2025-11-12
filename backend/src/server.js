@@ -10,14 +10,22 @@ import aiRoutes from "./routes/ai.js";
 // ✅ Load environment variables
 dotenv.config();
 
-// ✅ Quick check (you can remove later)
-console.log("OPENAI API KEY (loaded):", process.env.OPENAI_API_KEY ? "✅ Loaded" : "❌ Missing");
 
 // ✅ Initialize app
 const app = express();
 
 // ✅ Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",        // local frontend
+      "https://trackflowai.vercel.app" // deployed frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // ✅ Connect MongoDB
