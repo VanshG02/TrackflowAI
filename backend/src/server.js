@@ -23,6 +23,7 @@ app.use(
   })
 );
 
+app.options("*", cors());
 app.use(express.json());
 
 // Connect Mongo
@@ -32,6 +33,8 @@ connectDB();
 app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
+
+connectDB();
 
 // Test route
 app.get("/", (req, res) => {
