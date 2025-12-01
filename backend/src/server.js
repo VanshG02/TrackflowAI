@@ -15,7 +15,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://trackflowai.vercel.app", // keep this for deployed frontend
+      "https://trackflow-ai-kold.vercel.app/", // keep this for deployed frontend
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],

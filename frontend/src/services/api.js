@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://trackflow-backend.onrender.com",
+  baseURL: "https://trackflowai-backend.onrender.com",
   withCredentials: false,
 });
 
