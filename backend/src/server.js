@@ -11,26 +11,33 @@ dotenv.config();
 const app = express();
 
 // CORS
-app.use(
-  cors({
-    origin: [
+const allowedOrigins =  [
       "http://localhost:5173",
-      "https://trackflow-ai-kold.vercel.app/", // keep this for deployed frontend
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+      "https://trackflow-ai-kold.vercel.app", // keep this for deployed frontend
+    ];
+
+
+const corsOptions = {
+  origin(origin, callback) {
+    // allow requests with no origin (like Postman, curl, server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  preflightContinue: true, // let our own middleware send the response
+};
+
+app.use(cors(corsOptions));
 
 // Preflight handler for all routes safely
 // Preflight handler for all routes safely
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    return res.sendStatus(200);
+    return res.sendStatus(204);
   }
   next();
 });
