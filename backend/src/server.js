@@ -23,7 +23,19 @@ app.use(
   })
 );
 
-app.options("*", cors());
+// Preflight handler for all routes safely
+// Preflight handler for all routes safely
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+
 app.use(express.json());
 
 // Connect Mongo
@@ -34,7 +46,6 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-connectDB();
 
 // Test route
 app.get("/", (req, res) => {
@@ -45,6 +56,10 @@ app.get("/", (req, res) => {
 app.use("/api/expenses", expenseRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/ai", aiRoutes);
+
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 // Start server
 const PORT = process.env.PORT;
